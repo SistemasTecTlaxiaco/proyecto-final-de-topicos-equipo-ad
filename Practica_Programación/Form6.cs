@@ -13,19 +13,18 @@
     using System.Collections;
 using MySql.Data.MySqlClient;
 
-    namespace Practica_Programación
+namespace Practica_Programación
 {
     public partial class Form6 : Form
     {
-
         private string connectionString = "Server=localhost;Port=3308;Database=tienda_db;Uid=root;Pwd=root;";
+        private DataRowView productoSeleccionado; 
 
         public Form6()
         {
-         
             InitializeComponent();
             ConfigurarDataGridViewVenta();
-            ConfigurarControles();
+            ConfigurarDataGridViewProductos();
         }
 
         private void Form6_Load(object sender, EventArgs e)
@@ -38,7 +37,7 @@ using MySql.Data.MySqlClient;
 
         private void ConfigurarDataGridViewProductos()
         {
-            // Configurar DataGridView de productos
+           
             dataProductos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataProductos.MultiSelect = false;
             dataProductos.ReadOnly = true;
@@ -80,13 +79,13 @@ using MySql.Data.MySqlClient;
         {
             if (e.RowIndex >= 0)
             {
-                // Almacenar el producto seleccionado en la variable temporal
+               
                 productoSeleccionado = (dataProductos.DataSource as DataTable).DefaultView[e.RowIndex];
 
-                // Mostrar información del producto seleccionado
+               
                 txtBuscar.Text = productoSeleccionado["nombre"].ToString();
-                txtCantidad.Text = "1"; // Establecer cantidad por defecto
-                txtCantidad.Focus(); // Poner foco en el campo de cantidad
+                txtCantidad.Text = "1"; 
+                txtCantidad.Focus();
             }
         }
 
@@ -111,7 +110,7 @@ using MySql.Data.MySqlClient;
                 return;
             }
 
-
+            
             foreach (DataGridViewRow row in dataGridViewVenta.Rows)
             {
                 if (row.Cells["ID"].Value != null &&
@@ -130,7 +129,7 @@ using MySql.Data.MySqlClient;
                 }
             }
 
-
+            
             decimal precioVenta = Convert.ToDecimal(productoSeleccionado["precio_venta"]);
             decimal subtotal = cantidad * precioVenta;
 
@@ -148,9 +147,7 @@ using MySql.Data.MySqlClient;
             txtCantidad.Clear();
         }
 
-
-
-        private void CalcularTotales()
+        private void ActualizarTotales()
         {
             decimal total = 0;
             int numProductos = 0;
@@ -164,15 +161,18 @@ using MySql.Data.MySqlClient;
                 }
             }
 
-            txtTotal.Text = total.ToString("C");
-            txtNoProductos.Text = numProductos.ToString();
+            lblTotal.Text = total.ToString("C");
+            lblProductos.Text = numProductos.ToString();
         }
 
         private void LimpiarCampos()
         {
             dataGridViewVenta.Rows.Clear();
-            txtTotal.Clear();
-            txtNoProductos.Clear();
+            productoSeleccionado = null;
+            txtBuscar.Clear();
+            txtCantidad.Clear();
+            lblTotal.Text = "$0.00";
+            lblProductos.Text = "0";
         }
 
         private void BtnCancelar_Click_1(object sender, EventArgs e)
@@ -183,26 +183,6 @@ using MySql.Data.MySqlClient;
             if (r == DialogResult.Yes)
             {
                 LimpiarCampos();
-            }
-        }
-
-        private void BtnAgregar_Click(object sender, EventArgs e)
-        {
-            if (dataGridViewVenta.Rows.Count == 0)
-            {
-                MessageBox.Show("No hay productos en la venta");
-                return;
-            }
-
-            try
-            {
-                // Aquí iría el código para guardar la venta en la base de datos
-                MessageBox.Show("Venta registrada correctamente");
-                LimpiarCampos();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error al registrar venta: " + ex.Message);
             }
         }
 
@@ -249,6 +229,9 @@ using MySql.Data.MySqlClient;
             BtnAgregar_Click(sender, e);
         }
 
-        
+        private void dataProductos_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            
+        }
     }
 }
