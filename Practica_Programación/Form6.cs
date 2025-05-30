@@ -34,10 +34,9 @@ using MySql.Data.MySqlClient;
             IblFecha.Text = Operaciones.MostrarFecha();
             IblHora.Text = Operaciones.MostrarHora();
             CargarProductos();
-            ConfigurarDataGridViewVenta();
         }
 
-        private void ConfigurarControles()
+        private void ConfigurarDataGridViewProductos()
         {
             // Configurar DataGridView de productos
             dataProductos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -49,6 +48,8 @@ using MySql.Data.MySqlClient;
 
         private void ConfigurarDataGridViewVenta()
         {
+            dataGridViewVenta.Columns.Clear();
+            dataGridViewVenta.Columns.Add("ID", "ID");
             dataGridViewVenta.Columns.Add("Nombre", "Producto");
             dataGridViewVenta.Columns.Add("Precio", "Precio Unitario");
             dataGridViewVenta.Columns.Add("Cantidad", "Cantidad");

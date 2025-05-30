@@ -44,8 +44,6 @@
             IblHora = new Label();
             Cantidad = new Label();
             txtCantidad = new TextBox();
-            lblPrecio = new Label();
-            Precio = new Label();
             txtBuscar = new TextBox();
             btnBuscar = new Button();
             dataProductos = new DataGridView();
@@ -249,30 +247,6 @@
             txtCantidad.Size = new Size(54, 29);
             txtCantidad.TabIndex = 35;
             // 
-            // lblPrecio
-            // 
-            lblPrecio.AutoSize = true;
-            lblPrecio.BackColor = Color.Transparent;
-            lblPrecio.Font = new Font("Arial Rounded MT Bold", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblPrecio.ForeColor = Color.Transparent;
-            lblPrecio.Location = new Point(752, 190);
-            lblPrecio.Name = "lblPrecio";
-            lblPrecio.Size = new Size(28, 22);
-            lblPrecio.TabIndex = 37;
-            lblPrecio.Text = "---";
-            // 
-            // Precio
-            // 
-            Precio.AutoSize = true;
-            Precio.BackColor = Color.Transparent;
-            Precio.Font = new Font("Microsoft Sans Serif", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            Precio.ForeColor = Color.Transparent;
-            Precio.Location = new Point(673, 190);
-            Precio.Name = "Precio";
-            Precio.Size = new Size(70, 24);
-            Precio.TabIndex = 38;
-            Precio.Text = "Precio";
-            // 
             // txtBuscar
             // 
             txtBuscar.BackColor = SystemColors.InactiveBorder;
@@ -355,8 +329,6 @@
             Controls.Add(dataProductos);
             Controls.Add(btnBuscar);
             Controls.Add(txtBuscar);
-            Controls.Add(Precio);
-            Controls.Add(lblPrecio);
             Controls.Add(txtCantidad);
             Controls.Add(Cantidad);
             Controls.Add(IblHora);
@@ -402,8 +374,6 @@
         private ColumnHeader Neto;
         private Label Cantidad;
         private TextBox txtCantidad;
-        private Label lblPrecio;
-        private Label Precio;
         private TextBox txtBuscar;
         private Button button1;
         private Button btnBuscar;
