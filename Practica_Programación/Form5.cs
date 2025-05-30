@@ -24,12 +24,28 @@ namespace Practica_Programación
 
         private void button2_Click(object sender, EventArgs e)
         {
+            this.Hide();
+            Form8 nuevoFormulario = new Form8();
+            nuevoFormulario.Show();
 
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            this.Hide();
+            Form6 nuevoFormulario = new Form6();
+            nuevoFormulario.Show();
 
+        }
+
+        private void Form5_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

@@ -103,7 +103,7 @@
             Controls.Add(textBox3);
             Controls.Add(label2);
             Name = "Form4";
-            Text = "Form4";
+            Text = "Recuperar contraseña";
             ResumeLayout(false);
             PerformLayout();
         }

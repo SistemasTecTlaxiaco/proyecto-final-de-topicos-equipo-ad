@@ -28,16 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form5));
             label1 = new Label();
             button1 = new Button();
             button2 = new Button();
             button3 = new Button();
-            button4 = new Button();
             SuspendLayout();
             // 
             // label1
             // 
-            label1.Anchor = AnchorStyles.None;
+            label1.Anchor = AnchorStyles.Top;
             label1.AutoSize = true;
             label1.BackColor = Color.Transparent;
             label1.Font = new Font("Leckerli One", 36F, FontStyle.Bold, GraphicsUnit.Point, 0);
@@ -48,12 +48,16 @@
             label1.TabIndex = 2;
             label1.Text = "Menú";
             label1.TextAlign = ContentAlignment.TopCenter;
+            label1.UseMnemonic = false;
             label1.Click += label1_Click;
             // 
             // button1
             // 
+            button1.Anchor = AnchorStyles.None;
+            button1.AutoSize = true;
+            button1.BackColor = SystemColors.GradientActiveCaption;
             button1.Font = new Font("Nunito Black", 11.999999F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button1.ForeColor = Color.Red;
+            button1.ForeColor = Color.Teal;
             button1.Image = Properties.Resources.venta1;
             button1.ImageAlign = ContentAlignment.TopCenter;
             button1.Location = new Point(210, 115);
@@ -62,13 +66,16 @@
             button1.TabIndex = 23;
             button1.Text = "Hacer una venta";
             button1.TextAlign = ContentAlignment.BottomCenter;
-            button1.UseVisualStyleBackColor = true;
+            button1.UseVisualStyleBackColor = false;
             button1.Click += button1_Click;
             // 
             // button2
             // 
+            button2.Anchor = AnchorStyles.None;
+            button2.AutoSize = true;
+            button2.BackColor = SystemColors.GradientActiveCaption;
             button2.Font = new Font("Nunito Black", 11.999999F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button2.ForeColor = Color.Red;
+            button2.ForeColor = Color.Teal;
             button2.Image = Properties.Resources.Gemini_Generated_Image_nvshtznvshtznvsh;
             button2.ImageAlign = ContentAlignment.TopCenter;
             button2.Location = new Point(553, 115);
@@ -77,50 +84,40 @@
             button2.TabIndex = 24;
             button2.Text = "Inventario";
             button2.TextAlign = ContentAlignment.BottomCenter;
-            button2.UseVisualStyleBackColor = true;
+            button2.UseVisualStyleBackColor = false;
             button2.Click += button2_Click;
             // 
             // button3
             // 
+            button3.Anchor = AnchorStyles.None;
+            button3.AutoSize = true;
+            button3.BackColor = SystemColors.GradientActiveCaption;
             button3.Font = new Font("Nunito Black", 11.999999F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button3.ForeColor = Color.Red;
+            button3.ForeColor = Color.Teal;
             button3.Image = Properties.Resources.salir;
             button3.ImageAlign = ContentAlignment.TopCenter;
-            button3.Location = new Point(553, 417);
+            button3.Location = new Point(393, 413);
             button3.Name = "button3";
             button3.Size = new Size(291, 268);
             button3.TabIndex = 25;
             button3.Text = "Salir";
             button3.TextAlign = ContentAlignment.BottomCenter;
-            button3.UseVisualStyleBackColor = true;
-            // 
-            // button4
-            // 
-            button4.Font = new Font("Nunito Black", 11.999999F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button4.ForeColor = Color.Red;
-            button4.Image = Properties.Resources.cliente;
-            button4.ImageAlign = ContentAlignment.TopCenter;
-            button4.Location = new Point(210, 417);
-            button4.Name = "button4";
-            button4.Size = new Size(315, 268);
-            button4.TabIndex = 26;
-            button4.Text = "Clientes";
-            button4.TextAlign = ContentAlignment.BottomCenter;
-            button4.UseVisualStyleBackColor = true;
+            button3.UseVisualStyleBackColor = false;
+            button3.Click += button3_Click;
             // 
             // Form5
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackgroundImage = Properties.Resources.fondo_figma;
+            BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             ClientSize = new Size(1108, 730);
-            Controls.Add(button4);
             Controls.Add(button3);
             Controls.Add(button2);
             Controls.Add(button1);
             Controls.Add(label1);
             Name = "Form5";
-            Text = "Form5";
+            Text = "Menú";
+            Load += Form5_Load;
             ResumeLayout(false);
             PerformLayout();
         }

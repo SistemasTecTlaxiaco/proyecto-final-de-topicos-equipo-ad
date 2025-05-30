@@ -1,173 +1,233 @@
 ﻿
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using PruebaBiblioteca;
-using System.Text;
-using BibliotecaProyecto;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Collections;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Data;
+    using System.Drawing;
+    using System.Linq;
+    using PruebaBiblioteca;
+    using System.Text;
+    using BibliotecaProyecto;
+    using System.Threading.Tasks;
+    using System.Windows.Forms;
+    using System.Collections;
+using MySql.Data.MySqlClient;
 
-namespace Practica_Programación
+    namespace Practica_Programación
 {
     public partial class Form6 : Form
     {
+
+        private string connectionString = "Server=localhost;Port=3308;Database=tienda_db;Uid=root;Pwd=root;";
+
         public Form6()
         {
+         
             InitializeComponent();
+            ConfigurarDataGridViewVenta();
+            ConfigurarControles();
         }
-
-        static string[] productos = { "Teclado", "Impresora", "Monitor", "Mouse", "Laptop", "Tablet", "Auriculares", "Cámara Web", "Router", "Disco Duro", "Memoria USB", "Tarjeta Gráfica", "Fuente de Poder", "Gabinete", "Placa Madre", "Procesador", "RAM 16GB", "SSD 1TB" };
-        ArrayList aProducto = new ArrayList(productos);
 
         private void Form6_Load(object sender, EventArgs e)
         {
             LimpiarCampos();
-            Operaciones.MostrarHora();
             IblFecha.Text = Operaciones.MostrarFecha();
             IblHora.Text = Operaciones.MostrarHora();
-            LlenarProducto();
+            CargarProductos();
+            ConfigurarDataGridViewVenta();
         }
 
-        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        private void ConfigurarControles()
         {
-
+            // Configurar DataGridView de productos
+            dataProductos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataProductos.MultiSelect = false;
+            dataProductos.ReadOnly = true;
+            dataProductos.AllowUserToAddRows = false;
+            dataProductos.CellDoubleClick += DataProductos_CellDoubleClick;
         }
 
-        private void label3_Click(object sender, EventArgs e)
+        private void ConfigurarDataGridViewVenta()
         {
-
+            dataGridViewVenta.Columns.Add("Nombre", "Producto");
+            dataGridViewVenta.Columns.Add("Precio", "Precio Unitario");
+            dataGridViewVenta.Columns.Add("Cantidad", "Cantidad");
+            dataGridViewVenta.Columns.Add("Subtotal", "Subtotal");
         }
 
-        private void IblFecha_Click(object sender, EventArgs e)
+        private void CargarProductos()
         {
-
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = "SELECT id_producto, nombre, precio_venta, existencia FROM productos";
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(query, connection);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    dataProductos.DataSource = dt;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar productos: " + ex.Message);
+            }
         }
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
+        private void DataProductos_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex >= 0)
+            {
+                DataGridViewRow row = dataProductos.Rows[e.RowIndex];
+                string nombre = row.Cells["nombre"].Value.ToString();
+                decimal precio = Convert.ToDecimal(row.Cells["precio_venta"].Value);
+                int existencia = Convert.ToInt32(row.Cells["existencia"].Value);
 
+                // Verificar si el producto ya está en la venta
+                foreach (DataGridViewRow ventaRow in dataGridViewVenta.Rows)
+                {
+                    if (ventaRow.Cells["Nombre"].Value != null &&
+                        ventaRow.Cells["Nombre"].Value.ToString() == nombre)
+                    {
+                        int cantidadActual = Convert.ToInt32(ventaRow.Cells["Cantidad"].Value);
+                        if (cantidadActual < existencia)
+                        {
+                            ventaRow.Cells["Cantidad"].Value = cantidadActual + 1;
+                            ventaRow.Cells["Subtotal"].Value = (cantidadActual + 1) * precio;
+                        }
+                        else
+                        {
+                            MessageBox.Show("No hay suficiente existencia");
+                        }
+                        CalcularTotales();
+                        return;
+                    }
+                }
+
+                // Si no está en la venta, agregarlo
+                if (existencia > 0)
+                {
+                    // Crear una nueva fila (forma correcta)
+                    DataGridViewRow newRow = new DataGridViewRow();
+                    newRow.CreateCells(dataGridViewVenta); // Inicializa las celdas basadas en las columnas del DataGridView
+
+                    // Asignar valores
+                    newRow.Cells["Nombre"].Value = nombre;
+                    newRow.Cells["Precio"].Value = precio;
+                    newRow.Cells["Cantidad"].Value = 1;
+                    newRow.Cells["Subtotal"].Value = precio;
+
+                    // Agregar al DataGridView
+                    dataGridViewVenta.Rows.Add(newRow);
+                    CalcularTotales();
+                }
+                else
+                {
+                    MessageBox.Show("Producto sin existencia");
+                }
+            }
         }
 
-        private void IblHora_Click(object sender, EventArgs e)
+        private void CalcularTotales()
         {
+            decimal total = 0;
+            int numProductos = 0;
 
+            foreach (DataGridViewRow row in dataGridViewVenta.Rows)
+            {
+                if (row.Cells["Subtotal"].Value != null)
+                {
+                    total += Convert.ToDecimal(row.Cells["Subtotal"].Value);
+                    numProductos += Convert.ToInt32(row.Cells["Cantidad"].Value);
+                }
+            }
+
+            txtTotal.Text = total.ToString("C");
+            txtNoProductos.Text = numProductos.ToString();
         }
 
         private void LimpiarCampos()
         {
-            cobProducto.Text = "Seleccione un producto";
-            txtCantidad.Clear();
-            lblPrecio.Text = "0.00";
-        }
-
-        private void LlenarProducto()
-        {
-            foreach (var p in aProducto)
-            {
-                cobProducto.Items.Add(p);
-            }
-        }
-
-        private void btnCancelar_Click(object sender, EventArgs e)
-        {
-            DialogResult r = MessageBox.Show("¿Desea salir...?", "Ventas", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (r == DialogResult.Yes)
-            {
-                this.Close();
-            }
-            else
-            {
-                LimpiarCampos();
-            }
-        }
-
-
-        private void label7_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void cobProducto_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void BtnRegistrar_Click(object sender, EventArgs e)
-        {
-            if (cobProducto.SelectedIndex == -1 || string.IsNullOrWhiteSpace(txtCantidad.Text))
-            {
-                MessageBox.Show("Por favor, seleccione un producto y especifique la cantidad.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            if (!Operaciones.ValidarEntrada(txtCantidad.Text, out int cantidad))
-            {
-                MessageBox.Show("Ingrese una cantidad válida.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            string productoSeleccionado = cobProducto.SelectedItem.ToString();
-            double precio = ObtenerPrecio(productoSeleccionado);
-            double subtotal = Operaciones.CalcularSubtotal(precio, cantidad);
-            double neto = Operaciones.CalcularTotalNeto(precio, cantidad, 10); // Descuento del 10%
-
-            ListViewItem item = new ListViewItem(new[]
-            {
-                productoSeleccionado,
-                cantidad.ToString(),
-                precio.ToString("F2"),
-                subtotal.ToString("F2"),
-                neto.ToString("F2")
-            });
-
-            listView1.Items.Add(item);
-            LimpiarCampos();
-        }
-
-        private double ObtenerPrecio(string producto)
-        {
-            switch (producto)
-            {
-                case "Teclado": return 1_200.00;
-                case "Impresora": return 3_500.00;
-                case "Monitor": return 4_800.00;
-                case "Mouse": return 600.00;
-                case "Laptop": return 25_000.00;
-                case "Tablet": return 9_000.00;
-                case "Auriculares": return 1_800.00;
-                case "Cámara Web": return 2_200.00;
-                case "Router": return 3_000.00;
-                case "Disco Duro": return 5_500.00;
-                case "Memoria USB": return 450.00;
-                case "Tarjeta Gráfica": return 15_000.00;
-                case "Fuente de Poder": return 2_800.00;
-                case "Gabinete": return 3_700.00;
-                case "Placa Madre": return 12_000.00;
-                case "Procesador": return 18_500.00;
-                case "RAM 16GB": return 2_600.00;
-                case "SSD 1TB": return 4_200.00;
-                default: return 0.00;
-            }
+            dataGridViewVenta.Rows.Clear();
+            txtTotal.Clear();
+            txtNoProductos.Clear();
         }
 
         private void BtnCancelar_Click_1(object sender, EventArgs e)
         {
-            DialogResult r = MessageBox.Show("¿Desea salir?", "Ventas", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult r = MessageBox.Show("¿Desea cancelar la venta?", "Ventas",
+                                          MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (r == DialogResult.Yes)
-            {
-                this.Close();
-            }
-            else
             {
                 LimpiarCampos();
             }
         }
+
+        private void BtnAgregar_Click(object sender, EventArgs e)
+        {
+            if (dataGridViewVenta.Rows.Count == 0)
+            {
+                MessageBox.Show("No hay productos en la venta");
+                return;
+            }
+
+            try
+            {
+                // Aquí iría el código para guardar la venta en la base de datos
+                MessageBox.Show("Venta registrada correctamente");
+                LimpiarCampos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al registrar venta: " + ex.Message);
+            }
+        }
+
+        private void btnBuscar_Click(object sender, EventArgs e)
+        {
+            string busqueda = txtBuscar.Text.Trim();
+            if (string.IsNullOrEmpty(busqueda))
+            {
+                CargarProductos();
+                return;
+            }
+
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = "SELECT id_producto, nombre, precio_venta, existencia " +
+                                 "FROM productos WHERE nombre LIKE @busqueda";
+                    MySqlCommand cmd = new MySqlCommand(query, connection);
+                    cmd.Parameters.AddWithValue("@busqueda", "%" + busqueda + "%");
+
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    dataProductos.DataSource = dt;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al buscar productos: " + ex.Message);
+            }
+        }
+
+        private void BtnMenu_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            Form5 nuevoFormulario = new Form5();
+            nuevoFormulario.Show();
+        }
+
+        private void txtCobrar_Click(object sender, EventArgs e)
+        {
+            BtnAgregar_Click(sender, e);
+        }
+
+        
     }
 }
