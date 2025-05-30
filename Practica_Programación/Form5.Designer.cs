@@ -40,11 +40,11 @@
             label1.Anchor = AnchorStyles.Top;
             label1.AutoSize = true;
             label1.BackColor = Color.Transparent;
-            label1.Font = new Font("Leckerli One", 36F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label1.Font = new Font("Microsoft Sans Serif", 36F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label1.ForeColor = SystemColors.ButtonHighlight;
-            label1.Location = new Point(444, 9);
+            label1.Location = new Point(388, 7);
             label1.Name = "label1";
-            label1.Size = new Size(185, 81);
+            label1.Size = new Size(149, 55);
             label1.TabIndex = 2;
             label1.Text = "Menú";
             label1.TextAlign = ContentAlignment.TopCenter;
@@ -56,13 +56,14 @@
             button1.Anchor = AnchorStyles.None;
             button1.AutoSize = true;
             button1.BackColor = SystemColors.GradientActiveCaption;
-            button1.Font = new Font("Nunito Black", 11.999999F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            button1.Font = new Font("Microsoft Sans Serif", 11.999999F, FontStyle.Bold, GraphicsUnit.Point, 0);
             button1.ForeColor = Color.Teal;
             button1.Image = Properties.Resources.venta1;
             button1.ImageAlign = ContentAlignment.TopCenter;
-            button1.Location = new Point(210, 115);
+            button1.Location = new Point(184, 110);
+            button1.Margin = new Padding(3, 2, 3, 2);
             button1.Name = "button1";
-            button1.Size = new Size(315, 272);
+            button1.Size = new Size(276, 234);
             button1.TabIndex = 23;
             button1.Text = "Hacer una venta";
             button1.TextAlign = ContentAlignment.BottomCenter;
@@ -74,13 +75,14 @@
             button2.Anchor = AnchorStyles.None;
             button2.AutoSize = true;
             button2.BackColor = SystemColors.GradientActiveCaption;
-            button2.Font = new Font("Nunito Black", 11.999999F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            button2.Font = new Font("Microsoft Sans Serif", 11.999999F, FontStyle.Bold, GraphicsUnit.Point, 0);
             button2.ForeColor = Color.Teal;
             button2.Image = Properties.Resources.Gemini_Generated_Image_nvshtznvshtznvsh;
             button2.ImageAlign = ContentAlignment.TopCenter;
-            button2.Location = new Point(553, 115);
+            button2.Location = new Point(484, 110);
+            button2.Margin = new Padding(3, 2, 3, 2);
             button2.Name = "button2";
-            button2.Size = new Size(291, 272);
+            button2.Size = new Size(255, 262);
             button2.TabIndex = 24;
             button2.Text = "Inventario";
             button2.TextAlign = ContentAlignment.BottomCenter;
@@ -92,13 +94,14 @@
             button3.Anchor = AnchorStyles.None;
             button3.AutoSize = true;
             button3.BackColor = SystemColors.GradientActiveCaption;
-            button3.Font = new Font("Nunito Black", 11.999999F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            button3.Font = new Font("Microsoft Sans Serif", 11.999999F, FontStyle.Bold, GraphicsUnit.Point, 0);
             button3.ForeColor = Color.Teal;
             button3.Image = Properties.Resources.salir;
             button3.ImageAlign = ContentAlignment.TopCenter;
-            button3.Location = new Point(393, 413);
+            button3.Location = new Point(344, 334);
+            button3.Margin = new Padding(3, 2, 3, 2);
             button3.Name = "button3";
-            button3.Size = new Size(291, 268);
+            button3.Size = new Size(262, 262);
             button3.TabIndex = 25;
             button3.Text = "Salir";
             button3.TextAlign = ContentAlignment.BottomCenter;
@@ -107,14 +110,15 @@
             // 
             // Form5
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
-            ClientSize = new Size(1108, 730);
+            ClientSize = new Size(970, 596);
             Controls.Add(button3);
             Controls.Add(button2);
             Controls.Add(button1);
             Controls.Add(label1);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "Form5";
             Text = "Menú";
             Load += Form5_Load;

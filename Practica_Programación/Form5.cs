@@ -45,7 +45,18 @@ namespace Practica_Programación
 
         private void button3_Click(object sender, EventArgs e)
         {
-            Close();
+            
+            DialogResult result = MessageBox.Show(
+                "¿Estás seguro de que deseas salir de la aplicación?",
+                "Cerrar aplicación",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            if (result == DialogResult.Yes)
+            {
+                Application.Exit();
+            }
         }
     }
 }

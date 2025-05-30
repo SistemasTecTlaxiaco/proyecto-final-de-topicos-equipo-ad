@@ -226,7 +226,30 @@ namespace Practica_Programación
 
         private void txtCobrar_Click(object sender, EventArgs e)
         {
-            BtnAgregar_Click(sender, e);
+            if (dataGridViewVenta.Rows.Count == 0)
+            {
+                MessageBox.Show("No hay productos en la venta.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            
+            decimal total = 0;
+            foreach (DataGridViewRow row in dataGridViewVenta.Rows)
+            {
+                if (row.Cells["Subtotal"].Value != null)
+                {
+                    total += Convert.ToDecimal(row.Cells["Subtotal"].Value);
+                }
+            }
+
+            
+            MessageBox.Show($"Venta cobrada con éxito.\nTotal: {total.ToString("C")}",
+                            "Cobro exitoso",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
+
+            
+            LimpiarCampos();
         }
 
         private void dataProductos_CellContentClick(object sender, DataGridViewCellEventArgs e)
