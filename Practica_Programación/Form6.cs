@@ -80,55 +80,75 @@ using MySql.Data.MySqlClient;
         {
             if (e.RowIndex >= 0)
             {
-                DataGridViewRow row = dataProductos.Rows[e.RowIndex];
-                string nombre = row.Cells["nombre"].Value.ToString();
-                decimal precio = Convert.ToDecimal(row.Cells["precio_venta"].Value);
-                int existencia = Convert.ToInt32(row.Cells["existencia"].Value);
+                // Almacenar el producto seleccionado en la variable temporal
+                productoSeleccionado = (dataProductos.DataSource as DataTable).DefaultView[e.RowIndex];
 
-                // Verificar si el producto ya está en la venta
-                foreach (DataGridViewRow ventaRow in dataGridViewVenta.Rows)
-                {
-                    if (ventaRow.Cells["Nombre"].Value != null &&
-                        ventaRow.Cells["Nombre"].Value.ToString() == nombre)
-                    {
-                        int cantidadActual = Convert.ToInt32(ventaRow.Cells["Cantidad"].Value);
-                        if (cantidadActual < existencia)
-                        {
-                            ventaRow.Cells["Cantidad"].Value = cantidadActual + 1;
-                            ventaRow.Cells["Subtotal"].Value = (cantidadActual + 1) * precio;
-                        }
-                        else
-                        {
-                            MessageBox.Show("No hay suficiente existencia");
-                        }
-                        CalcularTotales();
-                        return;
-                    }
-                }
-
-                // Si no está en la venta, agregarlo
-                if (existencia > 0)
-                {
-                    // Crear una nueva fila (forma correcta)
-                    DataGridViewRow newRow = new DataGridViewRow();
-                    newRow.CreateCells(dataGridViewVenta); // Inicializa las celdas basadas en las columnas del DataGridView
-
-                    // Asignar valores
-                    newRow.Cells["Nombre"].Value = nombre;
-                    newRow.Cells["Precio"].Value = precio;
-                    newRow.Cells["Cantidad"].Value = 1;
-                    newRow.Cells["Subtotal"].Value = precio;
-
-                    // Agregar al DataGridView
-                    dataGridViewVenta.Rows.Add(newRow);
-                    CalcularTotales();
-                }
-                else
-                {
-                    MessageBox.Show("Producto sin existencia");
-                }
+                // Mostrar información del producto seleccionado
+                txtBuscar.Text = productoSeleccionado["nombre"].ToString();
+                txtCantidad.Text = "1"; // Establecer cantidad por defecto
+                txtCantidad.Focus(); // Poner foco en el campo de cantidad
             }
         }
+
+        private void BtnAgregar_Click(object sender, EventArgs e)
+        {
+            if (productoSeleccionado == null)
+            {
+                MessageBox.Show("No hay producto seleccionado");
+                return;
+            }
+
+            if (!int.TryParse(txtCantidad.Text, out int cantidad) || cantidad <= 0)
+            {
+                MessageBox.Show("Ingrese una cantidad válida");
+                return;
+            }
+
+            int existencia = Convert.ToInt32(productoSeleccionado["existencia"]);
+            if (cantidad > existencia)
+            {
+                MessageBox.Show("No hay suficiente existencia");
+                return;
+            }
+
+
+            foreach (DataGridViewRow row in dataGridViewVenta.Rows)
+            {
+                if (row.Cells["ID"].Value != null &&
+                    row.Cells["ID"].Value.ToString() == productoSeleccionado["id_producto"].ToString())
+                {
+                    // Actualizar cantidad y subtotal
+                    int cantidadActual = Convert.ToInt32(row.Cells["Cantidad"].Value);
+                    row.Cells["Cantidad"].Value = cantidadActual + cantidad;
+                    decimal precio = Convert.ToDecimal(row.Cells["Precio"].Value);
+                    row.Cells["Subtotal"].Value = (cantidadActual + cantidad) * precio;
+                    ActualizarTotales();
+                    productoSeleccionado = null;
+                    txtBuscar.Clear();
+                    txtCantidad.Clear();
+                    return;
+                }
+            }
+
+
+            decimal precioVenta = Convert.ToDecimal(productoSeleccionado["precio_venta"]);
+            decimal subtotal = cantidad * precioVenta;
+
+            dataGridViewVenta.Rows.Add(
+                productoSeleccionado["id_producto"],
+                productoSeleccionado["nombre"],
+                precioVenta,
+                cantidad,
+                subtotal
+            );
+
+            ActualizarTotales();
+            productoSeleccionado = null;
+            txtBuscar.Clear();
+            txtCantidad.Clear();
+        }
+
+
 
         private void CalcularTotales()
         {
